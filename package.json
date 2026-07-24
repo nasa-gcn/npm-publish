@@ -1,8 +1,13 @@
 {
-  "name": "javascript-action",
-  "description": "GitHub Actions JavaScript Template",
+  "name": "@nasa-gcn/npm-publish",
+  "description": "NPM Publish with automatic NPM tag based on prerelease ID",
   "version": "0.0.0",
-  "author": "",
+  "contributors": [
+    {
+      "name": "Leo Singer",
+      "email": "leo.p.singer@nasa.gov"
+    }
+  ],
   "type": "module",
   "private": true,
   "homepage": "https://github.com/actions/javascript-action#readme",
@@ -37,7 +42,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^3.0.0"
+    "@actions/core": "^3.0.0",
+    "@actions/exec": "^3.0.0",
+    "semver": "^7.8.5"
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.1",

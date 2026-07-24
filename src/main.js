@@ -1,5 +1,8 @@
 import * as core from '@actions/core'
-import { wait } from './wait.js'
+import { exec } from '@actions/exec'
+import { parse } from 'semver'
+import { readFile } from 'node:fs/promises'
+import { readPackage } from './readPackage'
 
 /**
  * The main function for the action.
@@ -8,18 +11,16 @@ import { wait } from './wait.js'
  */
 export async function run() {
   try {
-    const ms = core.getInput('milliseconds')
+    const args = ['publish', '--access', 'public']
 
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
+    const { version } = readPackage()
+    const preid = parse(version)?.prerelease[0]
+    if (preid) {
+      core.notice(`prerelease tag: ${preid}`)
+      args.push('--tag', preid)
+    }
 
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
+    await exec('npm', args)
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
